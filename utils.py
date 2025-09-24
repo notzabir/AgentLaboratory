@@ -6,6 +6,7 @@ import subprocess, string
 from openai import OpenAI
 import google.generativeai as genai
 from huggingface_hub import InferenceClient
+import base64
 
 
 def query_deepseekv3(prompt, system, api_key, attempt=0, temperature=0.0):
@@ -24,6 +25,76 @@ def query_deepseekv3(prompt, system, api_key, attempt=0, temperature=0.0):
         print(f"Query qwen error: {e}")
         if attempt >= 10: return f"Your attempt to query deepseekv3 failed: {e}"
         return query_deepseekv3(prompt, system, attempt+1)
+
+
+def query_deepseek_vlm(prompt, system, api_key, image_path=None, model="deepseek-vl-7b-chat", attempt=0, temperature=0.0):
+    """
+    Query DeepSeek VLM models with optional image input
+    
+    Args:
+        prompt: Text prompt
+        system: System prompt
+        api_key: DeepSeek API key
+        image_path: Path to image file (optional)
+        model: VLM model to use (deepseek-vl-7b-chat or deepseek-vl-1.3b-chat)
+        attempt: Retry attempt
+        temperature: Sampling temperature
+    
+    Returns:
+        Model response as string
+    """
+    try:
+        client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+        
+        if image_path and os.path.exists(image_path):
+            # Read and encode image
+            with open(image_path, "rb") as image_file:
+                base64_image = base64.b64encode(image_file.read()).decode('utf-8')
+            
+            # Determine image type
+            if image_path.lower().endswith('.png'):
+                image_type = "image/png"
+            elif image_path.lower().endswith(('.jpg', '.jpeg')):
+                image_type = "image/jpeg"
+            elif image_path.lower().endswith('.webp'):
+                image_type = "image/webp"
+            else:
+                image_type = "image/jpeg"  # Default
+            
+            messages = [
+                {"role": "system", "content": system},
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:{image_type};base64,{base64_image}"
+                            }
+                        }
+                    ]
+                }
+            ]
+        else:
+            # Text-only fallback
+            messages = [
+                {"role": "system", "content": system},
+                {"role": "user", "content": prompt},
+            ]
+        
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            stream=False,
+            temperature=temperature,
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Query DeepSeek VLM error: {e}")
+        if attempt >= 10: 
+            return f"Your attempt to query DeepSeek VLM failed: {e}"
+        return query_deepseek_vlm(prompt, system, api_key, image_path, model, attempt+1, temperature)
 
 
 def query_qwen(prompt, system, api_key, attempt=0, temperature=0.0):
