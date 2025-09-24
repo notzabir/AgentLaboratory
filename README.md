@@ -44,8 +44,9 @@
 
 * **OpenAI**: o1, o1-preview, o1-mini, gpt-4o, o3-mini
 * **DeepSeek**: deepseek-chat (deepseek-v3)
+* **DeepSeek VLM**: deepseek-vl-7b-chat, deepseek-vl-1.3b-chat (Vision-Language Models)
 
-To select a specific llm set the flag `--llm-backend="llm_model"` for example `--llm-backend="gpt-4o"` or `--llm-backend="deepseek-chat"`. Please feel free to add a PR supporting new models according to your need!
+To select a specific llm set the flag `--llm-backend="llm_model"` for example `--llm-backend="gpt-4o"` or `--llm-backend="deepseek-chat"` or `--llm-backend="deepseek-vl-7b-chat"` for vision tasks. Please feel free to add a PR supporting new models according to your need!
 
 ## 🖥️ Installation
 

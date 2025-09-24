@@ -1,0 +1,65 @@
+# VLM (Vision-Language Model) Example Configuration for Agent Laboratory
+# This demonstrates how to use DeepSeek VLM models for vision-based research
+
+# If you want to have user input or be a human-in-the-loop
+copilot-mode: True
+
+# Research topic involving vision analysis
+research-topic: "Develop techniques to analyze and interpret scientific figures, charts, and diagrams from research papers using vision-language models"
+
+# DeepSeek API key for VLM models
+deepseek-api-key: "DEEPSEEK-API-KEY-HERE"
+
+# VLM backend - choose from deepseek-vl-7b-chat or deepseek-vl-1.3b-chat
+llm-backend: "deepseek-vl-7b-chat"
+# Literature review backend (can use text model for this)
+lit-review-backend: "deepseek-chat"
+
+# Base language
+language: "English"
+
+# Number of arxiv papers to lit review
+num-papers-lit-review: 5
+# Total number of papers to write in sequence
+num-papers-to-write: 1
+# Do you want to run multiple agent labs in parallel?
+parallel-labs: False
+
+# Total mle-solver steps per lab
+mlesolver-max-steps: 3
+# Total paper-solver steps per lab
+papersolver-max-steps: 1
+# The lab index for this lab (used for parallel runs)
+lab-index: 1
+# If you want to load an existing save
+load-existing: False
+# If fail, run exception?
+except-if-fail: False
+# Compile latex into PDFs during paper-solver
+compile-latex: False
+
+# Task notes for VLM research
+task-notes:
+  plan-formulation:
+    - 'Your research should focus on visual analysis tasks that can benefit from vision-language models'
+    - 'Consider tasks like scientific figure interpretation, chart analysis, or diagram understanding'
+    - 'The VLM models can process both text and images simultaneously'
+    - 'Plan experiments that leverage the multimodal capabilities of the model'
+  data-preparation:
+    - 'Prepare datasets with both images and text descriptions'
+    - 'Consider using scientific papers with figures, charts with data, or diagrams with explanations'
+    - 'Ensure images are in supported formats (PNG, JPEG, WebP)'
+    - 'You can use the query_deepseek_vlm() function to process images'
+  running-experiments:
+    - "Use query_deepseek_vlm(prompt=text_prompt, system=system_prompt, api_key=api_key, image_path='path/to/image.jpg') for vision tasks"
+    - 'The VLM models can analyze images, extract text from images, interpret charts, and understand visual concepts'
+    - 'Combine visual analysis with text reasoning for comprehensive results'
+    - 'Compare results between deepseek-vl-7b-chat (higher quality) and deepseek-vl-1.3b-chat (faster/cheaper)'
+  results-interpretation:
+    - 'Evaluate the quality of visual understanding and interpretation'
+    - 'Compare VLM performance with traditional text-only approaches'
+    - 'Analyze the accuracy of visual element detection and description'
+  report-writing:
+    - 'Include visual examples in your report to demonstrate VLM capabilities'
+    - 'Discuss the advantages and limitations of vision-language models'
+    - 'Compare cost-effectiveness of different VLM model sizes'
